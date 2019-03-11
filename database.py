@@ -12,6 +12,7 @@ class Water(Model):
     start_coordinate_y = FloatField()
     end_coordinate_x = FloatField()
     end_coordinate_y = FloatField()
+    depth = FloatField()
     work_info = TextField()
     work_date = DateTimeField()
 
@@ -28,6 +29,7 @@ class Electricity(Model):
     start_coordinate_y = FloatField()
     end_coordinate_x = FloatField()
     end_coordinate_y = FloatField()
+    depth = FloatField()
     work_info = TextField()
     work_date = DateTimeField()
     class Meta:
@@ -42,6 +44,7 @@ class Data(Model):
     start_coordinate_y = FloatField()
     end_coordinate_x = FloatField()
     end_coordinate_y = FloatField()
+    depth = FloatField()
     work_info = TextField()
     work_date = DateTimeField()
     class Meta:
@@ -56,8 +59,16 @@ class Gas(Model):
     start_coordinate_y = FloatField()
     end_coordinate_x = FloatField()
     end_coordinate_y = FloatField()
+    depth = FloatField()
     work_info = TextField()
     work_date = DateTimeField()
     class Meta:
         database = pg_db
         db_table = 'gas_communication'
+
+
+if __name__ == '__main__':
+    Water.create_table()
+    Electricity.create_table()
+    Data.create_table()
+    Gas.create_table()
