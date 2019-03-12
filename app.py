@@ -22,7 +22,7 @@ def resp(code, data):
 
 
 def get_user_position():
-    return flask.request.headers['x_pos'], flask.request.headers['y_pos']
+    return flask.request.headers.get('x_pos'), flask.request.headers.get('y_pos')
 
 
 @app.errorhandler(400)
@@ -46,7 +46,7 @@ def get_water_communication():
     water_communications = Water.select().where((Water.start_coordinate_x < x_pos + X) &
                                                 (Water.start_coordinate_x > x_pos - X) &
                                                 (Water.start_coordinate_y < y_pos + Y) &
-                                                (Water.start_coordinate_y > y_pos - Y))
+                                                (Water.start_coordinate_y > y_pos - Y)) if x_pos is not None and y_pos is not None else Water.select()
     water_communications_json = [model_to_dict(water_communication) for water_communication in water_communications]
     return resp(200, water_communications_json)
 
@@ -67,7 +67,7 @@ def get_electricity_communication():
     electricity_communications = Electricity.select((Electricity.start_coordinate_x < x_pos + X) &
                                                     (Electricity.start_coordinate_x > x_pos - X) &
                                                     (Electricity.start_coordinate_y < y_pos + Y) &
-                                                    (Electricity.start_coordinate_y > y_pos - Y))
+                                                    (Electricity.start_coordinate_y > y_pos - Y)) if x_pos is not None and y_pos is not None else Electricity.select()
     electricity_communications_json = [model_to_dict(electricity_communication) for electricity_communication in
                                        electricity_communications]
     return resp(200, electricity_communications_json)
@@ -89,7 +89,7 @@ def get_gas_communication():
     gas_communications = Gas.select((Gas.start_coordinate_x < x_pos + X) &
                                     (Gas.start_coordinate_x > x_pos - X) &
                                     (Gas.start_coordinate_y < y_pos + Y) &
-                                    (Gas.start_coordinate_y > y_pos - Y))
+                                    (Gas.start_coordinate_y > y_pos - Y)) if x_pos is not None and y_pos is not None else Gas.select()
     gas_communications_json = [model_to_dict(gas_communication) for gas_communication in gas_communications]
     return resp(200, gas_communications_json)
 
@@ -110,7 +110,7 @@ def get_data_communication():
     data_communications = Data.select((Data.start_coordinate_x < x_pos + X) &
                                       (Data.start_coordinate_x > x_pos - X) &
                                       (Data.start_coordinate_y < y_pos + Y) &
-                                      (Data.start_coordinate_y > y_pos - Y))
+                                      (Data.start_coordinate_y > y_pos - Y)) if x_pos is not None and y_pos is not None else Data.select()
     data_communications_json = [model_to_dict(data_communication) for data_communication in data_communications]
     return resp(200, data_communications_json)
 
