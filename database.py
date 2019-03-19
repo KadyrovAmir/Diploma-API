@@ -66,9 +66,20 @@ class Gas(Model):
         database = pg_db
         db_table = 'gas_communication'
 
+class Marker(Model):
+    id = UUIDField(primary_key=True)
+    coordinate_x = FloatField()
+    coordinate_y = FloatField()
+    height = FloatField()
+    description = CharField()
+    class Meta:
+        database = pg_db
+        db_table = 'marker'
+
 
 if __name__ == '__main__':
     Water.create_table()
     Electricity.create_table()
     Data.create_table()
     Gas.create_table()
+    Marker.create_table()
