@@ -1,0 +1,36 @@
+<form action="/admin/water_communication">
+    <select name="type">
+        <option value="water">Вода</option>
+        <option value="canal">Канализация</option>
+    </select>
+    <input type="text" name="owner">
+    <input type="text" name="start_x">
+    <input type="text" name="start_y">
+    <input type="text" name="end_x">
+    <input type="text" name="end_y">
+    <input type="text" name="depth">
+    <input type="text" name="work_info">
+    <input type="date" name="work_date">
+    <input type="submit" value="Сохранить">
+</form>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Тип</th>
+        <th>Владелец</th>
+        <th>Координата начала X</th>
+        <th>Координата начала Y</th>
+        <th>Координата конца X</th>
+        <th>Координата конца Y</th>
+        <th>Глубина</th>
+        <th>Информация</th>
+        <th>Дата проведения работ</th>
+    </tr>
+    {% for water in water_json %}
+        <tr>
+        {% for key in water.keys() %}
+            <td>{{ water[key] }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
