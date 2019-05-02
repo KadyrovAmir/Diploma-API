@@ -1,7 +1,7 @@
 from peewee import *
 
-pg_db = PostgresqlDatabase('d2s19l9ch6ocv9', user='twqrxchrmkuhgq', password='057ffeabf4b1063fe6894263ff23578a3dd9cd3df931410dbee2f5fe8a581c33',
-                           host='ec2-107-20-185-27.compute-1.amazonaws.com', port=5432)
+pg_db = PostgresqlDatabase('df3bto0r70h9c4', user='vejxbjebcbrbej', password='c88adeedb2d969719c4fb650726c8a72c5b149ea50e77b0eb78c70ab94bf216b',
+                           host='ec2-54-247-178-166.eu-west-1.compute.amazonaws.com', port=5432)
 
 
 class Water(Model):
