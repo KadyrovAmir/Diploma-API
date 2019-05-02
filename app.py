@@ -19,7 +19,7 @@ def converter(o):
         return o.__str__()
 
 def to_json(data):
-    return json.dumps(data, default=converter) + "\n"
+    return json.dumps(data, default=converter, ensure_ascii=False) + "\n"
 
 
 def resp(code, data):
