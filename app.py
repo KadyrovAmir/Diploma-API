@@ -1,3 +1,5 @@
+import datetime
+
 import flask
 import uuid
 from database import *
@@ -9,9 +11,15 @@ app = flask.Flask(__name__)
 X = float(5 / 64000)
 Y = float(5 / 111000)
 
+def converter(o):
+    if isinstance(o, uuid.UUID):
+        return o.__str__()
+
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
 
 def to_json(data):
-    return json.dumps(data) + "\n"
+    return json.dumps(data, default=converter) + "\n"
 
 
 def resp(code, data):
@@ -217,4 +225,5 @@ def get_data_communication_by_id(data_id):
 
 
 if __name__ == '__main__':
+    app.debug = True
     app.run()

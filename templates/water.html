@@ -26,11 +26,11 @@
         <th>Информация</th>
         <th>Дата проведения работ</th>
     </tr>
-    {% for water in water_json %}
+    {%for water in data%}
         <tr>
-        {% for key in water.keys() %}
-            <td>{{ water[key] }}</td>
-        {% endfor %}
+        {%for key in water.keys()%}
+            <td>{{water[key]}}</td>
+        {%endfor%}
         </tr>
-    {% endfor %}
+    {%endfor%}
 </table>
