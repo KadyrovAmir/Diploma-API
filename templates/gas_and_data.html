@@ -1,13 +1,15 @@
 <html>
 <head>
-    <title>Информация по водопроводным сетям</title>
+    <title>
+        {% if type == 1 %}
+            Информация по газовым сетям
+        {% else %}
+            Информация по информационным и телефонным сетям
+        {% endif %}
+    </title>
 </head>
 <body>
-<form action="/admin/water_communication" method="post">
-    <select name="type">
-        <option value="Вода">Вода</option>
-        <option value="Канализация">Канализация</option>
-    </select>
+<form {% if type == 1 %} action="/admin/gas_communication" {% else %} action="/admin/data_communication" {% endif %} method="post">
     <input type="text" name="owner" placeholder="Владелец">
     <input type="text" name="start_x" placeholder="Начало сектора. Широта">
     <input type="text" name="start_y" placeholder="Начало сектора. Долгота">
@@ -21,7 +23,6 @@
 <table border="1">
     <tr>
         <th>ID</th>
-        <th>Тип</th>
         <th>Владелец</th>
         <th>Координата начала Y</th>
         <th>Координата начала X</th>
@@ -31,10 +32,10 @@
         <th>Информация</th>
         <th>Дата проведения работ</th>
     </tr>
-    {%for water in data%}
+    {%for elem in data%}
         <tr>
-        {%for key in water.keys()%}
-            <td>{{water[key]}}</td>
+        {%for key in elem.keys()%}
+            <td>{{elem[key]}}</td>
         {%endfor%}
         </tr>
     {%endfor%}
