@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>
+        {% if type == 'gas' %}
+            Информация по газовым сетям
+        {% elif type == 'data' %}
+            Информация по информационным и телефонным сетям
+        {% elif type == 'water' %}
+            Информация по водопроводным сетям
+        {% else %}
+            Информация по электрическим сетям
+        {% endif %}
+    </title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="/static/css/mdb.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Start project here-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="{{ url_for('admin_water') }}">Водопроводные сети<span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_electricity') }}">Электрические сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_gas') }}">Газовые сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_data') }}">Информационные сети</a>
+        </div>
+    </div>
+</nav>
+<div class="wrapper-editor">
+
+    <div class="text-center">
+        <a {% if type == 'gas' %}
+            href="/admin/gas_communication/add"
+        {% elif type == 'data' %}
+            href="/admin/data_communication/add"
+        {% elif type == 'water' %}
+            href="/admin/water_communication/add"
+        {% else %}
+            href="/admin/electricity_communication/add"
+        {% endif %} class="btn btn-info btn-rounded btn-sm">Add<i
+                class="fas fa-plus-square ml-1"></i></a>
+    </div>
+
+    {#    <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDelete"#}
+    {#         aria-hidden="true">#}
+    {#        <div class="modal-dialog" role="document">#}
+    {#            <div class="modal-content">#}
+    {#                <div class="modal-header text-center">#}
+    {#                    <h4 class="modal-title w-100 font-weight-bold ml-5 text-danger">Удаление записи</h4>#}
+    {#                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">#}
+    {#                        <span aria-hidden="true">&times;</span>#}
+    {#                    </button>#}
+    {#                </div>#}
+    {#                <div class="modal-body mx-3">#}
+    {#                    <p class="text-center h4">Вы действительно хотите удалить эту запись?</p>#}
+    {##}
+    {#                </div>#}
+    {#                <div class="modal-footer d-flex justify-content-center deleteButtonsWrapper">#}
+    {#                    <button type="submit" class="btn btn-danger btnYesClass" id="btnYesDel" data-dismiss="modal">Да#}
+    {#                    </button>#}
+    {#                    <button type="button" class="btn btn-primary btnNoClass" id="btnNoDel" data-dismiss="modal">Нет#}
+    {#                    </button>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+
+    <table id="infoTable" class="table table-striped table-bordered"
+           cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th id="id">ID</th>
+            {% if type == 'water' %}
+                <th>Тип</th>
+            {% elif type == 'electricity' %}
+                <th>Мощность</th>
+            {% endif %}
+            <th id="owner">Владелец</th>
+            <th id="start_x">Координата начала Y</th>
+            <th id="start_y">Координата начала X</th>
+            <th id="end_x">Координата конца Y</th>
+            <th id="end_y">Координата конца X</th>
+            <th id="depth">Глубина</th>
+            <th id="work_info">Информация</th>
+            <th id="work_date">Дата проведения работ</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for elem in data %}
+            <tr>
+                {% for key in elem.keys() %}
+                    <td>{{ elem[key] }}</td>
+                {% endfor %}
+                <td>
+                    <div class="btn-group" role="group" aria-label="Table Buttons">
+                        <a href="/admin/{{ type }}_communication/edit?id={{ elem['id'] }}"
+                           class="btn btn-info btn-rounded btn-sm buttonEdit"
+                        >Edit</a>
+                        <form action="/admin/{{ type }}_communication/delete?id={{ elem['id'] }}" method="post">
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm btn-rounded buttonDelete"
+                            >Delete
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</div>
+<!-- /Start project here-->
+
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script type="text/javascript" src="/static/js/jquery-3.4.0.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="/static/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<!-- Bootstrap Table -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.2.3/bootstrap-table.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="/static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="/static/js/my-script.js"></script>
+</body>
+
+</html>

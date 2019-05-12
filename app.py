@@ -22,16 +22,16 @@ def converter(o):
 
 def validate_data(data):
     try:
-        if data.get('power') is not None:
-            float(data['power'])
-        float(data['start_x'])
-        float(data['start_y'])
-        float(data['end_x'])
-        float(data['end_y'])
-        float(data['depth'])
-        datetime.datetime.strptime(flask.request.form['work_date'], "%d/%m/%Y %H:%M")
+        if data.get('inputPower') is not None:
+            float(data['inputPower'])
+        float(data['inputStartX'])
+        float(data['inputStartY'])
+        float(data['inputEndX'])
+        float(data['inputEndY'])
+        float(data['inputDepth'])
+        datetime.datetime.strptime(flask.request.form['inputWorkDate'], "%d/%m/%Y %H:%M")
         return True
-    except ValueError:
+    except:
         return False
 
 
@@ -71,87 +71,199 @@ def admin_panel():
     return flask.render_template('admin.html')
 
 
-@app.route('/admin/water_communication', methods=['GET', 'POST'])
-def admin_water():
+@app.route('/admin/<string:data_type>/delete', methods=['POST'])
+def admin_delete(data_type):
+    data_id = flask.request.args.get('id')
+    db = flask.request.path[7:-21]
+    if db == 'water':
+        data = Water.get(Water.id == data_id)
+        data.delete_instance()
+        return flask.redirect(flask.url_for('admin_water'))
+    elif db == 'electricity':
+        data = Electricity.get(Electricity.id == data_id)
+        data.delete_instance()
+        return flask.redirect(flask.url_for('admin_electricity'))
+    elif db == 'gas':
+        data = Gas.get(Gas.id == data_id)
+        data.delete_instance()
+        return flask.redirect(flask.url_for('admin_gas'))
+    elif db == 'data':
+        data = Data.get(Data.id == data_id)
+        data.delete_instance()
+        return flask.redirect(flask.url_for('admin_data'))
+    else:
+        return page_not_found_2()
+
+@app.route('/admin/<string:data_type>/edit', methods=['GET', 'POST'])
+def admin_edit(data_type):
+    data_id = flask.request.args.get('id')
+    db = flask.request.path[7:-19]
     if flask.request.method == 'POST':
         if validate_data(flask.request.form):
-            new_data = Water(id=uuid.uuid4(),
-                             type=flask.request.form['type'],
-                             owner=flask.request.form['owner'],
-                             start_coordinate_x=float(flask.request.form['start_x']),
-                             start_coordinate_y=float(flask.request.form['start_y']),
-                             end_coordinate_x=float(flask.request.form['end_x']),
-                             end_coordinate_y=float(flask.request.form['end_y']),
-                             depth=float(flask.request.form['depth']),
-                             work_info=flask.request.form['work_info'],
-                             work_date=datetime.datetime.strptime(flask.request.form['work_date'], "%d/%m/%Y %H:%M"))
-            new_data.save(force_insert=True)
-        return flask.redirect(flask.url_for('admin_water'))
+            if db == 'water':
+                new_data = Water(id=data_id,
+                                 type=flask.request.form['inputType'],
+                                 owner=flask.request.form['inputOwner'],
+                                 start_coordinate_x=float(flask.request.form['inputStartX']),
+                                 start_coordinate_y=float(flask.request.form['inputStartY']),
+                                 end_coordinate_x=float(flask.request.form['inputEndX']),
+                                 end_coordinate_y=float(flask.request.form['inputEndY']),
+                                 depth=float(flask.request.form['inputDepth']),
+                                 work_info=flask.request.form['inputWorkInfo'],
+                                 work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                      "%d/%m/%Y %H:%M"))
+                new_data.save()
+                return flask.redirect(flask.url_for('admin_water'))
+            elif db == 'electricity':
+                new_data = Electricity(id=data_id,
+                                       owner=flask.request.form['inputOwner'],
+                                       power=int(flask.request.form['inputPower']),
+                                       start_coordinate_x=float(flask.request.form['inputStartX']),
+                                       start_coordinate_y=float(flask.request.form['inputStartY']),
+                                       end_coordinate_x=float(flask.request.form['inputEndX']),
+                                       end_coordinate_y=float(flask.request.form['inputEndY']),
+                                       depth=float(flask.request.form['inputDepth']),
+                                       work_info=flask.request.form['inputWorkInfo'],
+                                       work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                            "%d/%m/%Y %H:%M"))
+                new_data.save()
+                return flask.redirect(flask.url_for('admin_electricity'))
+            elif db == 'gas':
+                new_data = Gas(id=data_id,
+                               owner=flask.request.form['inputOwner'],
+                               start_coordinate_x=float(flask.request.form['inputStartX']),
+                               start_coordinate_y=float(flask.request.form['inputStartY']),
+                               end_coordinate_x=float(flask.request.form['inputEndX']),
+                               end_coordinate_y=float(flask.request.form['inputEndY']),
+                               depth=float(flask.request.form['inputDepth']),
+                               work_info=flask.request.form['inputWorkInfo'],
+                               work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                    "%d/%m/%Y %H:%M"))
+                new_data.save()
+                return flask.redirect(flask.url_for('admin_gas'))
+            elif db == 'data':
+                new_data = Data(id=data_id,
+                                owner=flask.request.form['inputOwner'],
+                                start_coordinate_x=float(flask.request.form['inputStartX']),
+                                start_coordinate_y=float(flask.request.form['inputStartY']),
+                                end_coordinate_x=float(flask.request.form['inputEndX']),
+                                end_coordinate_y=float(flask.request.form['inputEndY']),
+                                depth=float(flask.request.form['inputDepth']),
+                                work_info=flask.request.form['inputWorkInfo'],
+                                work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                     "%d/%m/%Y %H:%M"))
+                new_data.save()
+                return flask.redirect(flask.url_for('admin_data'))
+            else:
+                return page_not_found_2()
+    else:
+        if db == 'water':
+            data = model_to_dict(Water.get(Water.id == data_id))
+        elif db == 'electricity':
+            data = model_to_dict(Electricity.get(Electricity.id == data_id))
+        elif db == 'gas':
+            data = model_to_dict(Gas.get(Gas.id == data_id))
+        elif db == 'data':
+            data = model_to_dict(Data.get(Data.id == data_id))
+        else:
+            return page_not_found_2()
+        data['work_date'] = datetime.datetime.strftime(data['work_date'], "%d/%m/%Y %H:%M")
+        return flask.render_template('data_edit.html', type=data_type, data=data, id=data_id)
+
+
+@app.route('/admin/<string:data_type>/add', methods=['GET', 'POST'])
+def admin_add(data_type):
+    if flask.request.method == 'POST':
+        db = flask.request.path[7:-18]
+        if validate_data(flask.request.form):
+            if db == 'water':
+                new_data = Water(id=uuid.uuid4(),
+                                 type=flask.request.form['inputType'],
+                                 owner=flask.request.form['inputOwner'],
+                                 start_coordinate_x=float(flask.request.form['inputStartX']),
+                                 start_coordinate_y=float(flask.request.form['inputStartY']),
+                                 end_coordinate_x=float(flask.request.form['inputEndX']),
+                                 end_coordinate_y=float(flask.request.form['inputEndY']),
+                                 depth=float(flask.request.form['inputDepth']),
+                                 work_info=flask.request.form['inputWorkInfo'],
+                                 work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                      "%d/%m/%Y %H:%M"))
+                new_data.save(force_insert=True)
+                return flask.redirect(flask.url_for('admin_water'))
+            elif db == 'electricity':
+                new_data = Electricity(id=uuid.uuid4(),
+                                       owner=flask.request.form['inputOwner'],
+                                       power=int(flask.request.form['inputPower']),
+                                       start_coordinate_x=float(flask.request.form['inputStartX']),
+                                       start_coordinate_y=float(flask.request.form['inputStartY']),
+                                       end_coordinate_x=float(flask.request.form['inputEndX']),
+                                       end_coordinate_y=float(flask.request.form['inputEndY']),
+                                       depth=float(flask.request.form['inputDepth']),
+                                       work_info=flask.request.form['inputWorkInfo'],
+                                       work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                            "%d/%m/%Y %H:%M"))
+                new_data.save(force_insert=True)
+                return flask.redirect(flask.url_for('admin_electricity'))
+            elif db == 'gas':
+                new_data = Gas(id=uuid.uuid4(),
+                               owner=flask.request.form['inputOwner'],
+                               start_coordinate_x=float(flask.request.form['inputStartX']),
+                               start_coordinate_y=float(flask.request.form['inputStartY']),
+                               end_coordinate_x=float(flask.request.form['inputEndX']),
+                               end_coordinate_y=float(flask.request.form['inputEndY']),
+                               depth=float(flask.request.form['inputDepth']),
+                               work_info=flask.request.form['inputWorkInfo'],
+                               work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                    "%d/%m/%Y %H:%M"))
+                new_data.save(force_insert=True)
+                return flask.redirect(flask.url_for('admin_gas'))
+            elif db == 'data':
+                new_data = Data(id=uuid.uuid4(),
+                                owner=flask.request.form['inputOwner'],
+                                start_coordinate_x=float(flask.request.form['inputStartX']),
+                                start_coordinate_y=float(flask.request.form['inputStartY']),
+                                end_coordinate_x=float(flask.request.form['inputEndX']),
+                                end_coordinate_y=float(flask.request.form['inputEndY']),
+                                depth=float(flask.request.form['inputDepth']),
+                                work_info=flask.request.form['inputWorkInfo'],
+                                work_date=datetime.datetime.strptime(flask.request.form['inputWorkDate'],
+                                                                     "%d/%m/%Y %H:%M"))
+                new_data.save(force_insert=True)
+                return flask.redirect(flask.url_for('admin_data'))
+            else:
+                return page_not_found_2()
+        else:
+            return flask.redirect(flask.url_for('admin_panel'))
+    else:
+        return flask.render_template('data_add.html', type=data_type)
+
+
+@app.route('/admin/water_communication', methods=['GET'])
+def admin_water():
     waters = Water.select()
     water_json = [model_to_dict(water) for water in waters]
-    return flask.render_template('water.html', data=water_json)
+    return flask.render_template('data.html', type='water', data=water_json)
 
 
-@app.route('/admin/electricity_communication', methods=['GET', 'POST'])
+@app.route('/admin/electricity_communication', methods=['GET'])
 def admin_electricity():
-    if flask.request.method == 'POST':
-        if validate_data(flask.request.form):
-            new_data = Electricity(id=uuid.uuid4(),
-                                   owner=flask.request.form['owner'],
-                                   power=int(flask.request.form['power']),
-                                   start_coordinate_x=float(flask.request.form['start_x']),
-                                   start_coordinate_y=float(flask.request.form['start_y']),
-                                   end_coordinate_x=float(flask.request.form['end_x']),
-                                   end_coordinate_y=float(flask.request.form['end_y']),
-                                   depth=float(flask.request.form['depth']),
-                                   work_info=flask.request.form['work_info'],
-                                   work_date=datetime.datetime.strptime(flask.request.form['work_date'],
-                                                                        "%d/%m/%Y %H:%M"))
-            new_data.save(force_insert=True)
-        return flask.redirect(flask.url_for('admin_electricity'))
     electricity = Electricity.select()
     electricity_json = [model_to_dict(elem) for elem in electricity]
-    return flask.render_template('electricity.html', data=electricity_json)
+    return flask.render_template('data.html', type='electricity', data=electricity_json)
 
 
-@app.route('/admin/gas_communication', methods=['GET', 'POST'])
+@app.route('/admin/gas_communication', methods=['GET'])
 def admin_gas():
-    if flask.request.method == 'POST':
-        if validate_data(flask.request.form):
-            new_data = Gas(id=uuid.uuid4(),
-                           type=flask.request.form['type'],
-                           start_coordinate_x=float(flask.request.form['start_x']),
-                           start_coordinate_y=float(flask.request.form['start_y']),
-                           end_coordinate_x=float(flask.request.form['end_x']),
-                           end_coordinate_y=float(flask.request.form['end_y']),
-                           depth=float(flask.request.form['depth']),
-                           work_info=flask.request.form['work_info'],
-                           work_date=datetime.datetime.strptime(flask.request.form['work_date'], "%d/%m/%Y %H:%M"))
-            new_data.save(force_insert=True)
-        return flask.redirect(flask.url_for('admin_gas'))
     gas = Gas.select()
     gas_json = [model_to_dict(elem) for elem in gas]
-    return flask.render_template('gas_and_data.html', type=1, data=gas_json)
+    return flask.render_template('data.html', type='gas', data=gas_json)
 
 
-@app.route('/admin/data_communication', methods=['GET', 'POST'])
+@app.route('/admin/data_communication', methods=['GET'])
 def admin_data():
-    if flask.request.method == 'POST':
-        if validate_data(flask.request.form):
-            new_data = Data(id=uuid.uuid4(),
-                            type=flask.request.form['type'],
-                            start_coordinate_x=float(flask.request.form['start_x']),
-                            start_coordinate_y=float(flask.request.form['start_y']),
-                            end_coordinate_x=float(flask.request.form['end_x']),
-                            end_coordinate_y=float(flask.request.form['end_y']),
-                            depth=float(flask.request.form['depth']),
-                            work_info=flask.request.form['work_info'],
-                            work_date=datetime.datetime.strptime(flask.request.form['work_date'], "%d/%m/%Y %H:%M"))
-            new_data.save(force_insert=True)
-        return flask.redirect(flask.url_for('admin_data'))
     data = Data.select()
     data_json = [model_to_dict(elem) for elem in data]
-    return flask.render_template('gas_and_data.html', type=0, data=data_json)
+    return flask.render_template('data.html', type='data', data=data_json)
 
 
 @app.route('/marker', methods=['GET'])
