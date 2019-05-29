@@ -20,18 +20,18 @@
 
 <!-- Start project here-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link" href="{{ url_for('admin_water') }}">Водопроводные сети<span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="{{ url_for('admin_electricity') }}">Электрические сети</a>
-          <a class="nav-item nav-link" href="{{ url_for('admin_gas') }}">Газовые сети</a>
-          <a class="nav-item nav-link" href="{{ url_for('admin_data') }}">Информационные сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_water') }}">Водопроводные сети<span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_electricity') }}">Электрические сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_gas') }}">Газовые сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_data') }}">Информационные сети</a>
         </div>
-      </div>
-  </nav>
+    </div>
+</nav>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-6">
+        <div class="col-6" style="margin-top: 30px">
             <div class="modal-content">
                 <div class="modal-header text-center">
                     <h4 class="modal-title w-100 font-weight-bold text-primary ml-5">Добавить новую запись</h4>
@@ -110,6 +110,9 @@
                 </div>
             </div>
         </div>
+        <div class="col-6">
+            <div id="map" style="width: 600px; height: 400px; margin-top: 30px"></div>
+        </div>
     </div>
 </div>
 <!-- /Start project here-->
@@ -128,6 +131,105 @@
 <script type="text/javascript" src="/static/js/mdb.min.js"></script>
 <!-- Custom scripts -->
 <script type="text/javascript" src="/static/js/my-script.js"></script>
+
+<script src="https://api-maps.yandex.ru/2.1/?apikey=5cc8da20-9719-4241-9e4e-6c3d4df9aebd&lang=ru_RU"
+        type="text/javascript">
+</script>
+<script type="text/javascript">
+    ymaps.ready(init);
+
+    function init() {
+        var inputStartX = document.getElementById('inputStartX');
+        var inputStartY = document.getElementById('inputStartY');
+        var inputEndX = document.getElementById('inputEndX');
+        var inputEndY = document.getElementById('inputEndY');
+        var myPlacemarkStart,
+            myPlacemarkEnd,
+            myMap = new ymaps.Map("map", {
+                center: [55.7999, 49.1061],
+                zoom: 12
+            }, {
+                searchControlProvider: 'yandex#search'
+            });
+
+        // Обработка события, возникающего при щелчке
+        // левой кнопкой мыши в любой точке карты.
+        myMap.events.add('click', function (e) {
+            var coords = e.get('coords');
+            if (myPlacemarkStart) {
+                myPlacemarkStart.geometry.setCoordinates(coords);
+                myPlacemarkStart.properties.set({
+                    iconCaption: 'Начало: ' + [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ')
+                });
+                inputStartX.value = coords[0].toPrecision(6);
+                inputStartY.value = coords[1].toPrecision(6);
+            }
+            else {
+                myPlacemarkStart = createPlacemarkStart(coords);
+                myMap.geoObjects.add(myPlacemarkStart);
+                // Слушаем событие окончания перетаскивания на метке.
+                myPlacemarkStart.events.add('dragend', function () {
+                    myPlacemarkStart.properties.set({
+                        iconCaption: 'Начало: ' + [myPlacemarkStart.geometry.getCoordinates()[0].toPrecision(6),
+                            myPlacemarkStart.geometry.getCoordinates()[1].toPrecision(6)].join(', ')
+                    });
+                    inputStartX.value = myPlacemarkStart.geometry.getCoordinates()[0].toPrecision(6);
+                    inputStartY.value = myPlacemarkStart.geometry.getCoordinates()[1].toPrecision(6);
+                });
+            }
+        });
+
+        myMap.events.add('contextmenu', function (e) {
+            var coords = e.get('coords');
+            if (myPlacemarkEnd) {
+                myPlacemarkEnd.geometry.setCoordinates(coords);
+                myPlacemarkEnd.properties.set({
+                    iconCaption: 'Конец: ' + [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ')
+                });
+                inputEndX.value = coords[0].toPrecision(6);
+                inputEndY.value = coords[1].toPrecision(6);
+            }
+            else {
+                myPlacemarkEnd = createPlacemarkEnd(coords);
+                myMap.geoObjects.add(myPlacemarkEnd);
+                // Слушаем событие окончания перетаскивания на метке.
+                myPlacemarkEnd.events.add('dragend', function () {
+                    myPlacemarkEnd.properties.set({
+                        iconCaption: 'Конец: ' + [myPlacemarkEnd.geometry.getCoordinates()[0].toPrecision(6),
+                            myPlacemarkEnd.geometry.getCoordinates()[1].toPrecision(6)].join(', ')
+                    });
+                    inputEndX.value = myPlacemarkEnd.geometry.getCoordinates()[0].toPrecision(6);
+                    inputEndY.value = myPlacemarkEnd.geometry.getCoordinates()[1].toPrecision(6);
+                });
+            }
+        });
+
+        // Создание метки.
+        function createPlacemarkStart(coords) {
+            inputStartX.value = coords[0].toPrecision(6);
+            inputStartY.value = coords[1].toPrecision(6);
+            return new ymaps.Placemark(coords, {
+                iconCaption: 'Начало: ' + [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ')
+            }, {
+                preset: 'islands#violetDotIconWithCaption',
+                draggable: true
+            });
+        }
+
+        function createPlacemarkEnd(coords) {
+            inputEndX.value = coords[0].toPrecision(6);
+            inputEndY.value = coords[1].toPrecision(6);
+            return new ymaps.Placemark(coords, {
+                iconCaption: 'Конец: ' + [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ')
+            }, {
+                preset: 'islands#greenDotIconWithCaption',
+                draggable: true
+            });
+        }
+    }
+
+
+</script>
 </body>
 
 </html>
