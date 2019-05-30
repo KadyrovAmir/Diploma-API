@@ -50,72 +50,71 @@
                             </div>
                         {% elif type == 'electricity_communication' %}
                             <div class="md-form mb-5">
-                                <input type="text" id="inputPower" name="inputPower" class="form-control validate"
+                                <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputPower" name="inputPower" class="form-control validate"
                                        value="{{ data['power'] }}">
-                                <label data-error="wrong" data-success="right" for="inputPower">Мощность</label>
+                                <label data-error="Некорректное число" data-success="" for="inputPower">Мощность</label>
                             </div>
                         {% endif %}
 
                         <div class="md-form mb-5">
                             <input type="text" id="inputOwner" name="inputOwner" class="form-control validate"
                                    value="{{ data['owner'] }}">
-                            <label data-error="wrong" data-success="right" for="inputOwner">Владелец</label>
+                            <label data-error="Некорректное имя владельца" data-success="" for="inputOwner">Владелец</label>
                         </div>
 
                         <div class="md-form mb-5">
-                            <input type="text" id="inputStartX" name="inputStartX" class="form-control validate"
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputStartX" name="inputStartX" class="form-control validate"
                                    value="{{ data['start_coordinate_x'] }}">
-                            <label data-error="wrong" data-success="right" for="inputStartX">Начало сектора.
+                            <label data-error="Неправильно введённые координаты" data-success="" for="inputStartX">Начало сектора.
                                 Широта</label>
                         </div>
 
                         <div class="md-form mb-5">
-                            <input type="text" id="inputStartY" name="inputStartY" class="form-control validate"
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputStartY" name="inputStartY" class="form-control validate"
                                    value="{{ data['start_coordinate_y'] }}">
-                            <label data-error="wrong" data-success="right" for="inputStartY">Начало сектора.
+                            <label data-error="Неправильно введённые координаты" data-success="" for="inputStartY">Начало сектора.
                                 Долгота</label>
                         </div>
 
                         <div class="md-form mb-5">
-                            <input type="text" id="inputEndX" name="inputEndX" class="form-control validate"
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputEndX" name="inputEndX" class="form-control validate"
                                    value="{{ data['end_coordinate_x'] }}">
-                            <label data-error="wrong" data-success="right" for="inputEndX">Конец сектора.
+                            <label data-error="Неправильно введённые координаты" data-success="" for="inputEndX">Конец сектора.
                                 Широта</label>
                         </div>
 
                         <div class="md-form mb-5">
-                            <input type="text" id="inputEndY" name="inputEndY" class="form-control validate"
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputEndY" name="inputEndY" class="form-control validate"
                                    value="{{ data['end_coordinate_y'] }}">
-                            <label data-error="wrong" data-success="right" for="inputEndY">Конец сектора.
+                            <label data-error="Неправильно введённые координаты" data-success="" for="inputEndY">Конец сектора.
                                 Долгота</label>
                         </div>
 
                         <div class="md-form mb-5">
-                            <input type="text" id="inputDepth" name="inputDepth" class="form-control validate"
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputDepth" name="inputDepth" class="form-control validate"
                                    value="{{ data['depth'] }}">
-                            <label data-error="wrong" data-success="right" for="inputDepth">Глубина</label>
+                            <label data-error="Некорректное число" data-success="" for="inputDepth">Глубина</label>
                         </div>
 
                         <div class="md-form mb-5">
                             <input type="text" id="inputWorkInfo" name="inputWorkInfo" class="form-control validate"
                                    value="{{ data['work_info'] }}">
-                            <label data-error="wrong" data-success="right" for="inputWorkInfo">Информация о
+                            <label data-error="Некорректная информация" data-success="" for="inputWorkInfo">Информация о
                                 работах</label>
                         </div>
 
                         <div class="md-form mb-5">
-                            <input type="text" id="inputWorkDate" name="inputWorkDate" class="form-control validate"
+                            <input pattern="(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4} (2[0-3]|[01][0-9]):[0-5][0-9]"
+                                   type="text" id="inputWorkDate" name="inputWorkDate" class="form-control validate"
                                    value="{{ data['work_date'] }}">
-                            <label data-error="wrong" data-success="right" for="inputWorkDate">Дата проведения
+                            <label data-error="Неправильно введённая дата" data-success="" for="inputWorkDate">Дата проведения
                                 работ</label>
                         </div>
-                        <div class="modal-footer d-flex justify-content-center editInsideWrapper">
-                            <button id="editBtn" class="btn btn-outline-secondary btn-block editInside" type="submit">
+                        <button id="editBtn" class="btn btn-outline-secondary btn-block editInside" type="submit">
                                 Сохранить
                                 изменения
                                 <i class="fas fa-paper-plane-o ml-1"></i>
                             </button>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -139,8 +138,6 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.2.3/bootstrap-table.min.js"></script>
 <!-- MDB core JavaScript -->
 <script type="text/javascript" src="/static/js/mdb.min.js"></script>
-<!-- Custom scripts -->
-<script type="text/javascript" src="/static/js/my-script.js"></script>
 
 <script src="https://api-maps.yandex.ru/2.1/?apikey=5cc8da20-9719-4241-9e4e-6c3d4df9aebd&lang=ru_RU"
         type="text/javascript">
