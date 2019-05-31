@@ -34,6 +34,15 @@ def validate_data(data):
     except:
         return False
 
+def validate_marker(data):
+    try:
+        float(data['inputCoordX'])
+        float(data['inputCoordY'])
+        float(data['inputHeight'])
+        return True
+    except:
+        return False
+
 
 def to_json(data):
     return json.dumps(data, default=converter, ensure_ascii=False) + "\n"
@@ -75,6 +84,10 @@ def admin_panel():
 def admin_delete(data_type):
     data_id = flask.request.args.get('id')
     db = flask.request.path[7:-21]
+    if data_type == 'marker':
+        data = Marker.get(Marker.id == data_id)
+        data.delete_instance()
+        return flask.redirect(flask.url_for('admin_marker'))
     if db == 'water':
         data = Water.get(Water.id == data_id)
         data.delete_instance()
@@ -93,6 +106,26 @@ def admin_delete(data_type):
         return flask.redirect(flask.url_for('admin_data'))
     else:
         return page_not_found_2()
+
+
+@app.route('/admin/marker/edit', methods=['GET', 'POST'])
+def admin_marker_edit():
+    data_id = flask.request.args.get('id')
+    if flask.request.method == 'POST':
+        if validate_marker(flask.request.form):
+            new_data = Marker(id=uuid.uuid4(),
+                              coordinate_x=flask.request.form['inputCoordX'],
+                              coordinate_y=flask.request.form['inputCoordY'],
+                              height=flask.request.form['inputHeight'],
+                              description=flask.request.form['inputInfo'])
+            new_data.save()
+            return flask.redirect(flask.url_for('admin_marker'))
+        else:
+            return flask.redirect(flask.url_for('admin_panel'))
+    else:
+        data = model_to_dict(Marker.get(Marker.id == data_id))
+        return flask.render_template('marker_edit.html', data=data, id=data_id)
+
 
 
 @app.route('/admin/<string:data_type>/edit', methods=['GET', 'POST'])
@@ -172,6 +205,24 @@ def admin_edit(data_type):
         return flask.render_template('data_edit.html', type=data_type, data=data, id=data_id)
 
 
+@app.route('/admin/marker/add', methods=['GET', 'POST'])
+def admin_add_marker():
+    if flask.request.method == 'POST':
+        if validate_marker(flask.request.form):
+            new_data = Marker(id=uuid.uuid4(),
+                              coordinate_x=flask.request.form['inputCoordX'],
+                              coordinate_y=flask.request.form['inputCoordY'],
+                              height=flask.request.form['inputHeight'],
+                              description=flask.request.form['inputInfo'])
+            new_data.save(force_insert=True)
+            return flask.redirect(flask.url_for('admin_marker'))
+        else:
+            return flask.redirect(flask.url_for('admin_panel'))
+    else:
+        return flask.render_template('marker_add.html')
+
+
+
 @app.route('/admin/<string:data_type>/add', methods=['GET', 'POST'])
 def admin_add(data_type):
     if flask.request.method == 'POST':
@@ -237,6 +288,13 @@ def admin_add(data_type):
             return flask.redirect(flask.url_for('admin_panel'))
     else:
         return flask.render_template('data_add.html', type=data_type)
+
+
+@app.route('/admin/marker', methods=['GET'])
+def admin_marker():
+    markers = Marker.select()
+    marker_json = [model_to_dict(marker) for marker in markers]
+    return flask.render_template('marker.html', type='marker', data=marker_json)
 
 
 @app.route('/admin/water_communication', methods=['GET'])

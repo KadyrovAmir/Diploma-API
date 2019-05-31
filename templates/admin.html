@@ -2,50 +2,52 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Панель подземных коммуникаций</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-  <!-- Bootstrap core CSS -->
-  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="/static/css/mdb.min.css" rel="stylesheet">
-  <!-- Custom styles -->
-  <link href="/static/css/style.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Панель подземных коммуникаций</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="/static/css/mdb.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="/static/css/style.css" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- Start your project here-->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+<!-- Start your project here-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link" href="{{ url_for('admin_water') }}">Водопроводные сети<span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="{{ url_for('admin_electricity') }}">Электрические сети</a>
-          <a class="nav-item nav-link" href="{{ url_for('admin_gas') }}">Газовые сети</a>
-          <a class="nav-item nav-link" href="{{ url_for('admin_data') }}">Информационные сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_water') }}">Водопроводные сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_electricity') }}">Электрические сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_gas') }}">Газовые сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_data') }}">Информационные сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_marker') }}">Специальные маркеры</a>
         </div>
-      </div>
-  </nav>
-  <div class="container">
+    </div>
+</nav>
+<div class="container">
     <div class="col-12 homepage">
-        <img src="/static/img/exclamation_mark.png" height="200dp" class="rounded mx-auto d-block" alt="Responsive image">
+        <img src="/static/img/exclamation_mark.png" height="200dp" class="rounded mx-auto d-block"
+             alt="Responsive image">
         <div class="text-center hometext">Для начала работы выберите таблицу.</div>
     </div>
-  </div>
-  <!-- /Start your project here-->
+</div>
+<!-- /Start your project here-->
 
-  <!-- SCRIPTS -->
-  <!-- JQuery -->
-  <script type="text/javascript" src="/static/js/jquery-3.4.0.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript" src="/static/js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="/static/js/mdb.min.js"></script>
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script type="text/javascript" src="/static/js/jquery-3.4.0.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="/static/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="/static/js/mdb.min.js"></script>
 </body>
 
 </html>

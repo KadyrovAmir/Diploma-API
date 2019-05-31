@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Добавление новой записи</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="/static/css/mdb.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Start project here-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="{{ url_for('admin_water') }}">Водопроводные сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_electricity') }}">Электрические сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_gas') }}">Газовые сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_data') }}">Информационные сети</a>
+            <a class="nav-item nav-link" href="{{ url_for('admin_marker') }}">Специальные маркеры</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6" style="margin-top: 30px">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold text-primary ml-5">Добавить новую запись</h4>
+                </div>
+                <div class="modal-body mx-3">
+                    <form role="form" id="addData" action="/admin/marker/add" method="post">
+
+                        <div class="md-form mb-5">
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputCoordX" name="inputCoordX"
+                                   class="form-control validate" required>
+                            <label data-error="Неправильно введённые координаты" data-success=""
+                                   for="inputCoordX">Координата по широте</label>
+                        </div>
+
+                        <div class="md-form mb-5">
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputCoordY" name="inputCoordY"
+                                   class="form-control validate" required>
+                            <label data-error="Неправильно введённые координаты" data-success=""
+                                   for="inputCoordY">Координата по долготе</label>
+                        </div>
+
+                        <div class="md-form mb-5">
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputHeight" name="inputHeight" class="form-control validate"
+                                   required>
+                            <label data-error="Некорректное число" data-success="" for="inputHeight">Высота</label>
+                        </div>
+
+                        <div class="md-form mb-5">
+                            <input type="text" id="inputInfo" name="inputInfo"
+                                   class="form-control validate" required>
+                            <label data-error="Некорректная информация" data-success=""
+                                   for="inputInfo">Дополнительная информация</label>
+                        </div>
+                        <button id="addBtn" class="btn btn-outline-primary btn-block buttonAdd"
+                                type="submit">
+                            Добавить запись
+                            <i class="fas fa-paper-plane-o ml-1"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div id="map" style="width: 600px; height: 400px; margin-top: 30px"></div>
+        </div>
+    </div>
+</div>
+<!-- /Start project here-->
+
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script type="text/javascript" src="/static/js/jquery-3.4.0.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="/static/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<!-- Bootstrap Table -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.2.3/bootstrap-table.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="/static/js/mdb.min.js"></script>
+
+<script src="https://api-maps.yandex.ru/2.1/?apikey=5cc8da20-9719-4241-9e4e-6c3d4df9aebd&lang=ru_RU"
+        type="text/javascript">
+</script>
+<script type="text/javascript">
+    ymaps.ready(init);
+
+    function init() {
+        var inputCoordX = document.getElementById('inputCoordX');
+        var inputCoordY = document.getElementById('inputCoordY');
+        var myPlacemark,
+            myMap = new ymaps.Map("map", {
+                center: [55.7999, 49.1061],
+                zoom: 12
+            }, {
+                searchControlProvider: 'yandex#search'
+            });
+
+        // Обработка события, возникающего при щелчке
+        // левой кнопкой мыши в любой точке карты.
+        myMap.events.add('click', function (e) {
+            var coords = e.get('coords');
+            if (myPlacemark) {
+                myPlacemark.geometry.setCoordinates(coords);
+                myPlacemark.properties.set({
+                    iconCaption: [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ')
+                });
+                inputCoordX.value = coords[0].toPrecision(6);
+                inputCoordY.value = coords[1].toPrecision(6);
+            }
+            else {
+                myPlacemark = createPlacemark(coords);
+                myMap.geoObjects.add(myPlacemark);
+                // Слушаем событие окончания перетаскивания на метке.
+                myPlacemark.events.add('dragend', function () {
+                    myPlacemark.properties.set({
+                        iconCaption: [myPlacemark.geometry.getCoordinates()[0].toPrecision(6),
+                            myPlacemark.geometry.getCoordinates()[1].toPrecision(6)].join(', ')
+                    });
+                    inputCoordX.value = myPlacemark.geometry.getCoordinates()[0].toPrecision(6);
+                    inputCoordY.value = myPlacemark.geometry.getCoordinates()[1].toPrecision(6);
+                });
+            }
+        });
+
+        // Создание метки.
+        function createPlacemark(coords) {
+            inputCoordX.value = coords[0].toPrecision(6);
+            inputCoordY.value = coords[1].toPrecision(6);
+            return new ymaps.Placemark(coords, {
+                iconCaption: [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ')
+            }, {
+                preset: 'islands#violetDotIconWithCaption',
+                draggable: true
+            });
+        }
+    }
+
+
+</script>
+</body>
+
+</html>
