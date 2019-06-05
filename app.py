@@ -1,4 +1,5 @@
 import datetime, time
+from math import cos
 
 import flask
 import uuid
@@ -57,6 +58,8 @@ def resp(code, data):
 
 
 def get_user_position():
+    global X
+    X = float(5 / (cos(float(flask.request.headers.get('x_pos'))) * 111152.8928))
     return flask.request.headers.get('x_pos'), flask.request.headers.get('y_pos')
 
 
