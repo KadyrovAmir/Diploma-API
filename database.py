@@ -21,6 +21,23 @@ class Water(Model):
         db_table = 'water_communication'
 
 
+class WaterArchive(Model):
+    id = UUIDField(primary_key=True)
+    type = CharField(max_length=15)
+    owner = CharField(max_length=30)
+    start_coordinate_x = FloatField()
+    start_coordinate_y = FloatField()
+    end_coordinate_x = FloatField()
+    end_coordinate_y = FloatField()
+    depth = FloatField()
+    work_info = TextField()
+    work_date = DateTimeField()
+
+    class Meta:
+        database = pg_db
+        db_table = 'water_archive'
+
+
 class Electricity(Model):
     id = UUIDField(primary_key=True)
     power = IntegerField()
@@ -32,9 +49,27 @@ class Electricity(Model):
     depth = FloatField()
     work_info = TextField()
     work_date = DateTimeField()
+
     class Meta:
         database = pg_db
         db_table = 'electricity_communication'
+
+
+class ElectricityArchive(Model):
+    id = UUIDField(primary_key=True)
+    power = IntegerField()
+    owner = CharField(max_length=30)
+    start_coordinate_x = FloatField()
+    start_coordinate_y = FloatField()
+    end_coordinate_x = FloatField()
+    end_coordinate_y = FloatField()
+    depth = FloatField()
+    work_info = TextField()
+    work_date = DateTimeField()
+
+    class Meta:
+        database = pg_db
+        db_table = 'electricity_archive'
 
 
 class Data(Model):
@@ -47,9 +82,26 @@ class Data(Model):
     depth = FloatField()
     work_info = TextField()
     work_date = DateTimeField()
+
     class Meta:
         database = pg_db
         db_table = 'data_communication'
+
+
+class DataArchive(Model):
+    id = UUIDField(primary_key=True)
+    owner = CharField(max_length=30)
+    start_coordinate_x = FloatField()
+    start_coordinate_y = FloatField()
+    end_coordinate_x = FloatField()
+    end_coordinate_y = FloatField()
+    depth = FloatField()
+    work_info = TextField()
+    work_date = DateTimeField()
+
+    class Meta:
+        database = pg_db
+        db_table = 'data_archive'
 
 
 class Gas(Model):
@@ -62,9 +114,27 @@ class Gas(Model):
     depth = FloatField()
     work_info = TextField()
     work_date = DateTimeField()
+
     class Meta:
         database = pg_db
         db_table = 'gas_communication'
+
+
+class GasArchive(Model):
+    id = UUIDField(primary_key=True)
+    owner = CharField(max_length=30)
+    start_coordinate_x = FloatField()
+    start_coordinate_y = FloatField()
+    end_coordinate_x = FloatField()
+    end_coordinate_y = FloatField()
+    depth = FloatField()
+    work_info = TextField()
+    work_date = DateTimeField()
+
+    class Meta:
+        database = pg_db
+        db_table = 'gas_archive'
+
 
 class Marker(Model):
     id = UUIDField(primary_key=True)
@@ -72,9 +142,22 @@ class Marker(Model):
     coordinate_y = FloatField()
     height = FloatField()
     description = CharField()
+
     class Meta:
         database = pg_db
         db_table = 'marker'
+
+
+class MarkerArchive(Model):
+    id = UUIDField(primary_key=True)
+    coordinate_x = FloatField()
+    coordinate_y = FloatField()
+    height = FloatField()
+    description = CharField()
+
+    class Meta:
+        database = pg_db
+        db_table = 'marker_archive'
 
 
 if __name__ == '__main__':
@@ -83,3 +166,9 @@ if __name__ == '__main__':
     Data.create_table()
     Gas.create_table()
     Marker.create_table()
+
+    WaterArchive.create_table()
+    ElectricityArchive.create_table()
+    DataArchive.create_table()
+    GasArchive.create_table()
+    MarkerArchive.create_table()

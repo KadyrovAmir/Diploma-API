@@ -12,6 +12,8 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
     <link href="/static/css/mdb.min.css" rel="stylesheet">
+    <!-- Bootstrap 3 DateTimePicker -->
+    <link href="/static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <!-- Custom styles -->
     <link href="/static/css/style.css" rel="stylesheet">
 </head>
@@ -48,7 +50,8 @@
                             </div>
                         {% elif type == 'electricity_communication' %}
                             <div class="md-form mb-5">
-                                <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputPower" name="inputPower" class="form-control validate"
+                                <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputPower" name="inputPower"
+                                       class="form-control validate"
                                        required>
                                 <label data-error="Некорректное число" data-success="" for="inputPower">Мощность</label>
                             </div>
@@ -93,7 +96,8 @@
                         </div>
 
                         <div class="md-form mb-5">
-                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputDepth" name="inputDepth" class="form-control validate"
+                            <input pattern="([0-9]+[.])?[0-9]+" type="text" id="inputDepth" name="inputDepth"
+                                   class="form-control validate"
                                    required>
                             <label data-error="Некорректное число" data-success="" for="inputDepth">Глубина</label>
                         </div>
@@ -105,7 +109,7 @@
                                 работах</label>
                         </div>
 
-                        <div class="md-form mb-5">
+                        <div class="md-form mb-5" id="datetimepicker">
                             <input pattern="(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4} (2[0-3]|[01][0-9]):[0-5][0-9]"
                                    type="text" id="inputWorkDate" name="inputWorkDate" class="form-control validate"
                                    required>
@@ -132,6 +136,8 @@
 <!-- SCRIPTS -->
 <!-- JQuery -->
 <script type="text/javascript" src="/static/js/jquery-3.4.0.min.js"></script>
+<!-- Moment -->
+<script src="/static/js/moment-with-locales.min.js"></script>
 <!-- Bootstrap tooltips -->
 <script type="text/javascript" src="/static/js/popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
@@ -141,7 +147,9 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.2.3/bootstrap-table.min.js"></script>
 <!-- MDB core JavaScript -->
 <script type="text/javascript" src="/static/js/mdb.min.js"></script>
-
+<!-- Bootstrap 3 DateTimePicker -->
+<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+<!-- Yandex Map -->
 <script src="https://api-maps.yandex.ru/2.1/?apikey=5cc8da20-9719-4241-9e4e-6c3d4df9aebd&lang=ru_RU"
         type="text/javascript">
 </script>
@@ -239,6 +247,15 @@
     }
 
 
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#inputWorkDate').datetimepicker({
+            format: 'DD/MM/YYYY HH:mm',
+            locale: 'ru'
+        });
+    });
 </script>
 </body>
 
