@@ -63,7 +63,7 @@ def get_user_position():
         X = float(5 / (cos(float(flask.request.headers.get('x_pos'))) * 111152.8928))
     except TypeError:
         pass
-    return flask.request.headers.get('x_pos'), flask.request.headers.get('y_pos')
+    return float(flask.request.headers.get('x_pos')), float(flask.request.headers.get('y_pos'))
 
 
 @app.errorhandler(400)
